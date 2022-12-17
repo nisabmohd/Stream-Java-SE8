@@ -1,6 +1,4 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -27,7 +25,8 @@ public class Main {
         //The main difference between intermediate and terminal operations is that intermediate operations return a stream as a result and
         // terminal operations return non-stream values like primitive or object or collection or may not return anything.
 
-        //forEach
+        // forEach(Consumer<? super T> action)
+        // Performs an action for each element of this stream.
         list.stream().forEach((item) -> System.out.println(item));
 
         // filter method
@@ -36,13 +35,12 @@ public class Main {
         List<Movie> filtered = list.stream().filter((movie) -> movie.getRatings() > 9).toList();
         System.out.println(filtered);
 
-        // map
         // <R> Stream<R> map(Function<? super T,? extends R> mapper)
         // Returns a stream consisting of the results of applying the given function to the elements of this stream.
         List<Long> ids = list.stream().map((item) -> item.getId()).toList();
         System.out.println(filtered);
 
-        // concat
+
         // concat(Stream<? extends T> a, Stream<? extends T> b)
         // Creates a lazily concatenated stream whose elements are all the elements of the first stream followed by all the elements of the second stream.
         List<Movie> temp = List.of(new Movie("en", "Temp", 45, 1.8f));
@@ -59,11 +57,6 @@ public class Main {
         // Returns an Optional describing the first element of this stream, or an empty Optional if the stream is empty.
         Movie first = list.stream().filter(item -> item.getId() == 278).findFirst().orElse(null);
         System.out.println(first);
-
-        // flatMap (Function<? super T,? extends Stream<? extends R>> mapper)
-        // Returns a stream consisting of the results of replacing each element of this stream with the contents of a mapped stream produced by applying
-        // the provided mapping function to each element.
-
 
         // short circuit operations
         List<Movie> shorthand = list.stream().skip(1).limit(1).toList();
@@ -95,22 +88,46 @@ public class Main {
 
         // reduce(T identity, BinaryOperator<T> accumulator)
         // Performs a reduction on the elements of this stream, using the provided identity value and an associative accumulation function, and returns the reduced value.
-        Float ratingsSum=list.stream().map(item -> item.getRatings()).reduce(0.0f, (aFloat, aFloat2) -> aFloat + aFloat2);
+        Float ratingsSum = list.stream().map(item -> item.getRatings()).reduce(0.0f, (aFloat, aFloat2) -> aFloat + aFloat2);
         System.out.println(ratingsSum);
 
         //	anyMatch(Predicate<? super T> predicate)
         // Returns whether any elements of this stream match the provided predicate.
-        boolean present=list.stream().anyMatch(movie -> movie.getId()==278);
+        boolean present = list.stream().anyMatch(movie -> movie.getId() == 278);
         System.out.println(present);
 
         // allMatch(Predicate<? super T> predicate)
         // Returns whether all elements of this stream match the provided predicate.
-        boolean allEnglish=list.stream().allMatch(movie -> movie.getLanguage()=="en");
+        boolean allEnglish = list.stream().allMatch(movie -> movie.getLanguage() == "en");
         System.out.println(allEnglish);
 
         // count()
         // Returns the count of elements in this stream.
-        Long ans=list.stream().filter(movie -> movie.getLanguage()=="ja").count();
+        Long ans = list.stream().filter(movie -> movie.getLanguage() == "ja").count();
         System.out.println(ans);
+
+        // streams with Map
+        Map<Integer, Integer> map = new HashMap<>();
+        map.put(1, 10);
+        map.put(2, 20);
+        map.put(3, 30);
+        List<Map.Entry<Integer, Integer>> mapEntryList = new ArrayList<>(map.entrySet());
+        List<Map.Entry<Integer, Integer>> filteredMapEntry = mapEntryList.stream().filter(item -> item.getValue() == 30).toList();
+        System.out.println(filteredMapEntry);
+
+        // streams with Set
+        Set<Integer> set = new HashSet<>(Arrays.asList(1,2,3,45));
+        Set<Integer> dupset=set.stream().map(item->item*10).collect(Collectors.toSet());
+        System.out.println(dupset);
+
+        // streams with PriorityQueue
+        PriorityQueue<Integer> pq=new PriorityQueue<>();
+        pq.add(1);
+        pq.add(31);
+        pq.add(100);
+        pq.add(814);
+        pq.add(14);
+        pq.stream().forEachOrdered(item-> System.out.print(item+" "));
+
     }
 }
